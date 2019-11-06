@@ -1775,15 +1775,22 @@ main(int argc, char *argv[])
     lflow_init();
 
     /* Connect to OVS OVSDB instance. */
+    VLOG_INFO("XXX: Before IDL_LOOP");
     struct ovsdb_idl_loop ovs_idl_loop = OVSDB_IDL_LOOP_INITIALIZER(
         ovsdb_idl_create(ovs_remote, &ovsrec_idl_class, false, true));
+    VLOG_INFO("XXX: After IDL_LOOP");
     ctrl_register_ovs_idl(ovs_idl_loop.idl);
+    VLOG_INFO("XXX: ctrl_register after");
     ovsdb_idl_get_initial_snapshot(ovs_idl_loop.idl);
+    VLOG_INFO("XXX: After got initial snapshit");
 
     /* Configure OVN SB database. */
+    VLOG_INFO("XXX: Configuring database");
     struct ovsdb_idl_loop ovnsb_idl_loop = OVSDB_IDL_LOOP_INITIALIZER(
         ovsdb_idl_create_unconnected(&sbrec_idl_class, true));
+    VLOG_INFO("XXX: Databse configured");
     ovsdb_idl_set_leader_only(ovnsb_idl_loop.idl, false);
+    VLOG_INFO("XXX: leader set");
 
     unixctl_command_register("connection-status", "", 0, 0,
                              ovn_controller_conn_show, ovnsb_idl_loop.idl);
